@@ -1,6 +1,9 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
+import express from 'express';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import routes from './routes';
+import bodyParser from 'body-parser';
+
 dotenv.config();
 
 const app = express();
@@ -8,7 +11,7 @@ const port = process.env.PORT || 3001;
 
 // connect mongoose DB
 mongoose
-    .connect('mongodb://localhost:27017')
+    .connect(process.env.MONGO_DB)
     .then(() => {
         console.log('connection successfully!');
     })
@@ -16,9 +19,9 @@ mongoose
         console.log('connection error', e);
     });
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
+app.use(bodyParser.json());
+// routes
+routes(app);
 
 app.listen(port, () => {
     console.log('Server is running at port ' + port);
