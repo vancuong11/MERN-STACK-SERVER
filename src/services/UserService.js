@@ -102,8 +102,76 @@ const updateUserService = (id, data) => {
     });
 };
 
+const deleteUserService = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: id,
+            });
+            if (!checkUser) {
+                resolve({
+                    status: 'OK',
+                    message: 'The user is not defined',
+                });
+            }
+
+            await User.findByIdAndDelete(id);
+
+            resolve({
+                status: 'OK',
+                message: 'Delete User Success',
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+const getAllUserService = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await User.find();
+
+            resolve({
+                status: 'OK',
+                message: 'Get All User Success',
+                data: user,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+const getDetailsUserService = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await User.findOne({
+                _id: id,
+            });
+            if (!user) {
+                resolve({
+                    status: 'OK',
+                    message: 'The user is not defined',
+                });
+            }
+
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                data: user,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 module.exports = {
     createUserService,
     loginUserService,
     updateUserService,
+    deleteUserService,
+    getAllUserService,
+    getDetailsUserService,
 };
