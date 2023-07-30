@@ -1,4 +1,5 @@
 import UserService from '../services/UserService';
+import JwtService from '../services/JwtService';
 
 const createUser = async (req, res) => {
     try {
@@ -118,6 +119,22 @@ const getDetailsUser = async (req, res) => {
     }
 };
 
+const refreshToken = async (req, res) => {
+    try {
+        const token = req.headers.token.split(' ')[1];
+        if (!token) {
+            return res.status(200).json({
+                status: 'ERROR',
+                message: 'the token is required',
+            });
+        }
+        const response = await JwtService.refreshTokenJwtService(token);
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     createUser,
     loginUser,
@@ -125,4 +142,5 @@ module.exports = {
     deleteUser,
     getAllUser,
     getDetailsUser,
+    refreshToken,
 };
