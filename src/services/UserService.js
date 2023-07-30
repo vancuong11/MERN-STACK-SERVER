@@ -76,7 +76,34 @@ const loginUserService = (inputData) => {
     });
 };
 
+const updateUserService = (id, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: id,
+            });
+            if (!checkUser) {
+                resolve({
+                    status: 'OK',
+                    message: 'The user is not defined',
+                });
+            }
+
+            const updateUser = await User.findByIdAndUpdate(id, data, { new: true });
+
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                data: updateUser,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 module.exports = {
     createUserService,
     loginUserService,
+    updateUserService,
 };
