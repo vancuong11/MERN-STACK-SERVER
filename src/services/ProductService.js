@@ -110,13 +110,45 @@ const deleteProductService = (id) => {
     });
 };
 
-const getAllProductService = (limit, page) => {
+const getAllProductService = (limit, page, sort, filter) => {
     return new Promise(async (resolve, reject) => {
         try {
             const totalProduct = await Product.count();
+            if (filter) {
+                const label = filter[0];
+                const productFilter = await Product.find({ [label]: { $regex: filter[1] } });
+                resolve({
+                    status: 'OK',
+                    message: 'Get All Product Success',
+                    data: productFilter,
+                    total: totalProduct,
+                    pageCurrent: Number(page) + 1,
+                    totalPage: Math.ceil(totalProduct / limit),
+                });
+            }
+            if (sort) {
+                const objSort = {};
+                objSort[sort[1]] = sort[0];
+                const productSort = await Product.find()
+                    .limit(limit)
+                    .skip(page * limit)
+                    .sort(objSort);
+
+                resolve({
+                    status: 'OK',
+                    message: 'Get All Product Success',
+                    data: productSort,
+                    total: totalProduct,
+                    pageCurrent: Number(page) + 1,
+                    totalPage: Math.ceil(totalProduct / limit),
+                });
+            }
             const product = await Product.find()
                 .limit(limit)
-                .skip(page * limit);
+                .skip(page * limit)
+                .sort({
+                    name: sort,
+                });
 
             resolve({
                 status: 'OK',
