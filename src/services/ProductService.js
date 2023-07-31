@@ -110,15 +110,21 @@ const deleteProductService = (id) => {
     });
 };
 
-const getAllProductService = () => {
+const getAllProductService = (limit, page) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const product = await Product.find();
+            const totalProduct = await Product.count();
+            const product = await Product.find()
+                .limit(limit)
+                .skip(page * limit);
 
             resolve({
                 status: 'OK',
                 message: 'Get All Product Success',
                 data: product,
+                total: totalProduct,
+                pageCurrent: Number(page) + 1,
+                totalPage: Math.ceil(totalProduct / limit),
             });
         } catch (error) {
             reject(error);
