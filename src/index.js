@@ -21,7 +21,7 @@ mongoose
         console.log('connection error', e);
     });
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cookieParser());
 // routes
 routes(app);
