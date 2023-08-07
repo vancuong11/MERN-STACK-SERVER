@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import routes from './routes';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -18,8 +20,9 @@ mongoose
     .catch((e) => {
         console.log('connection error', e);
     });
-
+app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
 // routes
 routes(app);
 

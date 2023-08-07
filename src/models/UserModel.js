@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema(
     {
-        name: { type: String, required: true },
+        // name: { type: String, required: true },
+        name: { type: String },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
         isAdmin: { type: Boolean, default: false, require: true },
-        phone: { type: String, required: true },
+        phone: { type: String },
+        // phone: { type: String, required: true },
         access_token: { type: String, required: false },
         refresh_token: { type: String, required: false },
     },

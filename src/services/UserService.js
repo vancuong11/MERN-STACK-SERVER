@@ -11,7 +11,7 @@ const createUserService = (newUser) => {
             });
             if (checkEmail !== null) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERROR',
                     message: 'The email is already',
                 });
             }
@@ -37,14 +37,14 @@ const createUserService = (newUser) => {
 
 const loginUserService = (inputData) => {
     return new Promise(async (resolve, reject) => {
-        const { name, email, password, confirmPassword, phone } = inputData;
+        const { email, password } = inputData;
         try {
             const checkUser = await User.findOne({
                 email: email,
             });
             if (checkUser === null) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERROR',
                     message: 'The user is not defined',
                 });
             }
@@ -52,7 +52,7 @@ const loginUserService = (inputData) => {
             const comparePassword = bcrypt.compareSync(password, checkUser.password);
             if (!comparePassword) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERROR',
                     message: 'The password or user is incorrect',
                 });
             }

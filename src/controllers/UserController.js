@@ -6,19 +6,19 @@ const createUser = async (req, res) => {
         const { name, email, password, confirmPassword, phone } = req.body;
         const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         const isCheckEmail = reg.test(email);
-        if (!name || !email || !password || !confirmPassword || !phone) {
+        if (!email || !password || !confirmPassword) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERROR',
                 message: 'The input is required',
             });
         } else if (!isCheckEmail) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERROR',
                 message: 'The input is email',
             });
         } else if (password !== confirmPassword) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERROR',
                 message: 'The input is equal confirmPassword',
             });
         }
@@ -33,27 +33,28 @@ const createUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     try {
-        const { name, email, password, confirmPassword, phone } = req.body;
+        const { email, password } = req.body;
         const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         const isCheckEmail = reg.test(email);
-        if (!name || !email || !password || !confirmPassword || !phone) {
+        if (!email || !password) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERROR',
                 message: 'The input is required',
             });
         } else if (!isCheckEmail) {
             return res.status(200).json({
-                status: 'error',
+                status: 'ERROR',
                 message: 'The input is email',
-            });
-        } else if (password !== confirmPassword) {
-            return res.status(200).json({
-                status: 'error',
-                message: 'The input is equal confirmPassword',
             });
         }
         const data = await UserService.loginUserService(req.body);
-        return res.status(200).json(data);
+        const { refresh_token, ...newData } = data;
+        res.cookie('refresh_token', refresh_token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'strict',
+        });
+        return res.status(200).json(newData);
     } catch (error) {
         return res.status(404).json({
             errMessage: error,
@@ -121,7 +122,7 @@ const getDetailsUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
     try {
-        const token = req.headers.token.split(' ')[1];
+        const token = req.cookies.refresh_token;
         if (!token) {
             return res.status(200).json({
                 status: 'ERROR',

@@ -143,6 +143,7 @@ const getAllProductService = (limit, page, sort, filter) => {
                     totalPage: Math.ceil(totalProduct / limit),
                 });
             }
+            // pagination
             const product = await Product.find()
                 .limit(limit)
                 .skip(page * limit)
