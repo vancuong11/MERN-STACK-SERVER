@@ -166,7 +166,20 @@ const getDetailsUserService = (id) => {
         }
     });
 };
+const deleteManyUserService = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await User.deleteMany({ _id: id });
 
+            resolve({
+                status: 'OK',
+                message: 'Delete User Success',
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 module.exports = {
     createUserService,
     loginUserService,
@@ -174,4 +187,5 @@ module.exports = {
     deleteUserService,
     getAllUserService,
     getDetailsUserService,
+    deleteManyUserService,
 };

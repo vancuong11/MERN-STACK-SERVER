@@ -148,6 +148,22 @@ const logoutUser = async (req, res) => {
     }
 };
 
+const deleteManyUser = async (req, res) => {
+    try {
+        const userManyId = req.body;
+        if (!userManyId) {
+            return res.status(200).json({
+                status: 'ERROR',
+                message: 'the userManyId is required',
+            });
+        }
+        const response = await UserService.deleteManyUserService(userManyId);
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     createUser,
     loginUser,
@@ -157,4 +173,5 @@ module.exports = {
     getDetailsUser,
     refreshToken,
     logoutUser,
+    deleteManyUser,
 };
