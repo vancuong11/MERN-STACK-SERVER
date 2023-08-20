@@ -2,8 +2,8 @@ import ProductService from '../services/ProductService';
 
 const createProduct = async (req, res) => {
     try {
-        const { name, image, type, countInStock, price, rating, description } = req.body;
-        if (!name || !image || !type || !countInStock || !price || !rating) {
+        const { name, image, type, countInStock, price, rating, description, discount } = req.body;
+        if (!name || !image || !type || !countInStock || !price || !rating || !description || !discount) {
             return res.status(200).json({
                 status: 'ERROR',
                 message: 'The input is required',
@@ -70,7 +70,7 @@ const deleteProduct = async (req, res) => {
 const getAllProduct = async (req, res) => {
     try {
         const { limit, page, sort, filter } = req.query;
-        const response = await ProductService.getAllProductService(limit, page, sort, filter);
+        const response = await ProductService.getAllProductService(Number(limit) || 8, Number(page) || 0, sort, filter);
         return res.status(200).json(response);
     } catch (error) {
         console.log(error);
@@ -93,6 +93,15 @@ const deleteManyProduct = async (req, res) => {
     }
 };
 
+const getAllTypeProduct = async (req, res) => {
+    try {
+        const response = await ProductService.getAllTypeProductService();
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     createProduct,
     updateProduct,
@@ -100,4 +109,5 @@ module.exports = {
     deleteProduct,
     getAllProduct,
     deleteManyProduct,
+    getAllTypeProduct,
 };

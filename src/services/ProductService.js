@@ -2,7 +2,7 @@ import Product from '../models/ProductModel';
 
 const createProductService = (dataInput) => {
     return new Promise(async (resolve, reject) => {
-        const { name, image, type, countInStock, price, rating, description } = dataInput;
+        const { name, image, type, countInStock, price, rating, description, discount } = dataInput;
         try {
             const checkProduct = await Product.findOne({
                 name: name,
@@ -21,6 +21,7 @@ const createProductService = (dataInput) => {
                 price: price,
                 rating: rating,
                 description: description,
+                discount: discount,
             });
             if (createProduct) {
                 resolve({
@@ -150,7 +151,6 @@ const getAllProductService = (limit, page, sort, filter) => {
                 .sort({
                     name: sort,
                 });
-
             resolve({
                 status: 'OK',
                 message: 'Get All Product Success',
@@ -158,6 +158,7 @@ const getAllProductService = (limit, page, sort, filter) => {
                 total: totalProduct,
                 pageCurrent: Number(page) + 1,
                 totalPage: Math.ceil(totalProduct / limit),
+                // totalPage: totalProduct / limit,
             });
         } catch (error) {
             reject(error);
@@ -180,6 +181,22 @@ const deleteManyProductService = (id) => {
     });
 };
 
+const getAllTypeProductService = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allType = await Product.distinct('type');
+
+            resolve({
+                status: 'OK',
+                message: 'Get All Type Product',
+                data: allType,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 module.exports = {
     createProductService,
     updateProductService,
@@ -187,4 +204,5 @@ module.exports = {
     deleteProductService,
     getAllProductService,
     deleteManyProductService,
+    getAllTypeProductService,
 };
