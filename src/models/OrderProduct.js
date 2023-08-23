@@ -20,13 +20,11 @@ const oderSchema = new mongoose.Schema(
             fullName: { type: String, required: true },
             address: { type: String, required: true },
             city: { type: String, required: true },
-            country: { type: String, required: true },
-            phone: { type: String, required: true },
+            phone: { type: Number, required: true },
         },
         paymentMethods: { type: String, required: true },
         itemsPrice: { type: Number, required: true },
         shippingPrice: { type: Number, require: true },
-        taxPrice: { type: Number, require: true },
         totalPrice: { type: Number, require: true },
         // join table user into orderProduct
         user: {
