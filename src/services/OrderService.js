@@ -14,6 +14,8 @@ const createOrderService = (data) => {
             city,
             user,
             phone,
+            isPaid,
+            paidAt,
         } = data;
         try {
             const promises = orderItems.map(async (order) => {
@@ -44,6 +46,8 @@ const createOrderService = (data) => {
                         shippingPrice: shippingPrice,
                         totalPrice: totalPrice,
                         user: user,
+                        isPaid: isPaid,
+                        paidAt: paidAt,
                     });
                     if (createOrder) {
                         return {
