@@ -80,7 +80,7 @@ const createOrderService = (data) => {
 const getOrderDetailsService = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const order = await Order.findOne({
+            const order = await Order.find({
                 user: id,
             });
             if (!order) {
@@ -101,7 +101,89 @@ const getOrderDetailsService = (id) => {
     });
 };
 
+const getDetailsOrderService = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const order = await Order.findById({
+                _id: id,
+            });
+            if (!order) {
+                resolve({
+                    status: 'OK',
+                    message: 'The order is not defined',
+                });
+            }
+
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                data: order,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+const cancelOrderDetailsService = (id, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let order = [];
+            const promises = data.map(async (order) => {
+                const productData = await Product.findOneAndUpdate(
+                    {
+                        _id: order.product,
+                        sell: { $gte: order.amount },
+                    },
+                    {
+                        $inc: {
+                            countInStock: +order.amount,
+                            sell: -order.amount,
+                        },
+                    },
+                    { new: true },
+                );
+                if (productData) {
+                    order = await Order.findByIdAndDelete(id);
+                    if (order === null) {
+                        resolve({
+                            status: 'OK',
+                            message: 'The order is not defined',
+                        });
+                    }
+                } else {
+                    return {
+                        status: 'OK',
+                        message: 'ERROR',
+                        id: order.product,
+                    };
+                }
+            });
+
+            const results = await Promise.all(promises);
+
+            const newData = results && results.filter((item) => item);
+            if (newData.length) {
+                resolve({
+                    status: 'ERROR',
+                    message: `Sản phẩm với id${newData.join(',')} không đủ hàng`,
+                });
+            }
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: order,
+            });
+        } catch (error) {
+            console.log(error);
+            reject(error);
+        }
+    });
+};
+
 module.exports = {
     createOrderService,
     getOrderDetailsService,
+    getDetailsOrderService,
+    cancelOrderDetailsService,
 };
