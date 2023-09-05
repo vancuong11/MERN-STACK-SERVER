@@ -1,5 +1,6 @@
 import Order from '../models/OrderProduct';
 import Product from '../models/ProductModel';
+import emailService from '../services/EmailService';
 
 const createOrderService = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -16,6 +17,7 @@ const createOrderService = (data) => {
             phone,
             isPaid,
             paidAt,
+            email,
         } = data;
         try {
             const promises = orderItems.map(async (order) => {
@@ -50,6 +52,7 @@ const createOrderService = (data) => {
                         paidAt: paidAt,
                     });
                     if (createOrder) {
+                        await emailService.sendMailCreateOrder(email, orderItems);
                         return {
                             status: 'OK',
                             message: 'SUCCESS',
@@ -76,6 +79,7 @@ const createOrderService = (data) => {
                 message: 'SUCCESS',
             });
         } catch (error) {
+            console.log(error);
             reject(error);
         }
     });
