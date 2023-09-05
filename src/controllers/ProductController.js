@@ -13,7 +13,7 @@ const createProduct = async (req, res) => {
         const response = await ProductService.createProductService(req.body);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -31,7 +31,7 @@ const updateProduct = async (req, res) => {
         const response = await ProductService.updateProductService(productId, data);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -47,7 +47,7 @@ const getDetailsProduct = async (req, res) => {
         const response = await ProductService.getDetailsProductService(ProductId);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -63,7 +63,7 @@ const deleteProduct = async (req, res) => {
         const response = await ProductService.deleteProductService(productId);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -73,7 +73,7 @@ const getAllProduct = async (req, res) => {
         const response = await ProductService.getAllProductService(Number(limit) || 8, Number(page) || 0, sort, filter);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -89,7 +89,7 @@ const deleteManyProduct = async (req, res) => {
         const response = await ProductService.deleteManyProductService(manyProductId);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -98,7 +98,7 @@ const getAllTypeProduct = async (req, res) => {
         const response = await ProductService.getAllTypeProductService();
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 

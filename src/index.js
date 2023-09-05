@@ -15,10 +15,10 @@ const port = process.env.PORT || 3001;
 mongoose
     .connect(process.env.MONGO_DB)
     .then(() => {
-        console.log('connection DB successfully!');
+        //console.log('connection DB successfully!');
     })
     .catch((e) => {
-        console.log('connection error', e);
+        //console.log('connection error', e);
     });
 app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -27,5 +27,5 @@ app.use(cookieParser());
 routes(app);
 
 app.listen(port, () => {
-    console.log('Server is running at port ' + port);
+    //console.log('Server is running at port ' + port);
 });

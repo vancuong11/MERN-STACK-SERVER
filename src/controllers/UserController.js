@@ -54,7 +54,7 @@ const loginUser = async (req, res) => {
             secure: false,
             sameSite: 'strict',
         });
-        return res.status(200).json(newData);
+        return res.status(200).json(newData, refresh_token);
     } catch (error) {
         return res.status(404).json({
             errMessage: error,
@@ -75,7 +75,7 @@ const updateUser = async (req, res) => {
         const response = await UserService.updateUserService(userId, data);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -91,7 +91,7 @@ const deleteUser = async (req, res) => {
         const response = await UserService.deleteUserService(userId);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -100,7 +100,7 @@ const getAllUser = async (req, res) => {
         const response = await UserService.getAllUserService();
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -116,13 +116,13 @@ const getDetailsUser = async (req, res) => {
         const response = await UserService.getDetailsUserService(userId);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
 const refreshToken = async (req, res) => {
     try {
-        const token = req.cookies.refresh_token;
+        const token = req.headers.token.split(' ')[1];
         if (!token) {
             return res.status(200).json({
                 status: 'ERROR',
@@ -132,7 +132,7 @@ const refreshToken = async (req, res) => {
         const response = await JwtService.refreshTokenJwtService(token);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -144,7 +144,7 @@ const logoutUser = async (req, res) => {
             message: 'Logout successfully',
         });
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 
@@ -160,7 +160,7 @@ const deleteManyUser = async (req, res) => {
         const response = await UserService.deleteManyUserService(userManyId);
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 };
 

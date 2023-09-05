@@ -35,29 +35,10 @@ const createOrderService = (data) => {
                     { new: true },
                 );
                 if (productData) {
-                    const createOrder = await Order.create({
-                        orderItems: orderItems,
-                        shippingAddress: {
-                            fullName: fullName,
-                            address: address,
-                            city: city,
-                            phone: phone,
-                        },
-                        paymentMethods: paymentMethods,
-                        itemsPrice: itemsPrice,
-                        shippingPrice: shippingPrice,
-                        totalPrice: totalPrice,
-                        user: user,
-                        isPaid: isPaid,
-                        paidAt: paidAt,
-                    });
-                    if (createOrder) {
-                        await emailService.sendMailCreateOrder(email, orderItems);
-                        return {
-                            status: 'OK',
-                            message: 'SUCCESS',
-                        };
-                    }
+                    return {
+                        status: 'OK',
+                        message: 'SUCCESS',
+                    };
                 } else {
                     return {
                         status: 'OK',
@@ -66,20 +47,45 @@ const createOrderService = (data) => {
                     };
                 }
             });
+
             const results = await Promise.all(promises);
-            const newData = results && results.filter((item) => item.id);
+            const newData = results && results.filter((item) => item.id || null);
             if (newData.length) {
+                const arrId = [];
+                newData.forEach((item) => {
+                    arrId.push(item.id);
+                });
                 resolve({
                     status: 'ERROR',
-                    message: `Sản phẩm với id${newData.join(',')} không đủ hàng`,
+                    message: `Sản phẩm với id${arrId.join(',')} không đủ hàng`,
                 });
+            } else {
+                const createOrder = await Order.create({
+                    orderItems: orderItems,
+                    shippingAddress: {
+                        fullName: fullName,
+                        address: address,
+                        city: city,
+                        phone: phone,
+                    },
+                    paymentMethods: paymentMethods,
+                    itemsPrice: itemsPrice,
+                    shippingPrice: shippingPrice,
+                    totalPrice: totalPrice,
+                    user: user,
+                    isPaid: isPaid,
+                    paidAt: paidAt,
+                });
+                if (createOrder) {
+                    await emailService.sendMailCreateOrder(email, orderItems);
+                    resolve({
+                        status: 'OK',
+                        message: 'SUCCESS',
+                    });
+                }
             }
-            resolve({
-                status: 'OK',
-                message: 'SUCCESS',
-            });
         } catch (error) {
-            console.log(error);
+            //console.log(error);
             reject(error);
         }
     });
@@ -183,7 +189,23 @@ const cancelOrderDetailsService = (id, data) => {
                 data: order,
             });
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            reject(error);
+        }
+    });
+};
+
+const getAllOrderService = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const order = await Order.find().sort({ createdAt: -1, updatedAt: -1 });
+
+            resolve({
+                status: 'OK',
+                message: 'Get All User Success',
+                data: order,
+            });
+        } catch (error) {
             reject(error);
         }
     });
@@ -194,4 +216,5 @@ module.exports = {
     getOrderDetailsService,
     getDetailsOrderService,
     cancelOrderDetailsService,
+    getAllOrderService,
 };

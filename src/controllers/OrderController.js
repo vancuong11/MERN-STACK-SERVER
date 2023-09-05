@@ -82,9 +82,21 @@ const cancelOrderDetails = async (req, res) => {
         });
     }
 };
+
+const getAllOrder = async (req, res) => {
+    try {
+        const data = await OrderService.getAllOrderService();
+        return res.status(200).json(data);
+    } catch (error) {
+        return res.status(400).json({
+            message: error,
+        });
+    }
+};
 module.exports = {
     createOrder,
     getAllOrderDetails,
     getDetailsOrder,
     cancelOrderDetails,
+    getAllOrder,
 };
